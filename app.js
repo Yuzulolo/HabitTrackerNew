@@ -9,6 +9,7 @@
  */
 
 const STORAGE_KEY = 'habit-tracker.v1';
+const THEME_KEY = 'habit-tracker.theme';
 const DAYS_SHOWN = 7;
 const UNDO_SECONDS = 5;
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -23,6 +24,65 @@ const undoBar = document.getElementById('undo-bar');
 const undoMessage = document.getElementById('undo-message');
 const undoButton = document.getElementById('undo-btn');
 const undoCountdown = document.getElementById('undo-countdown');
+const themeToggle = document.getElementById('theme-toggle');
+
+/**
+ * Theme.
+ *
+ * No stored choice means no data-theme attribute, so CSS follows the OS and
+ * keeps following it if the OS flips mid-session. Toggling stores an explicit
+ * choice that overrides the OS from then on. Applied before anything else so
+ * the stored theme is in place by first paint.
+ */
+
+const darkQuery = typeof window.matchMedia === 'function'
+  ? window.matchMedia('(prefers-color-scheme: dark)')
+  : null;
+
+function storedTheme() {
+  try {
+    const choice = localStorage.getItem(THEME_KEY);
+    return choice === 'light' || choice === 'dark' ? choice : null;
+  } catch (err) {
+    console.warn('Could not read the saved theme.', err);
+    return null;
+  }
+}
+
+function systemTheme() {
+  return darkQuery && darkQuery.matches ? 'dark' : 'light';
+}
+
+/** What the user actually sees: their choice if they made one, else the OS. */
+function activeTheme() {
+  return storedTheme() ?? systemTheme();
+}
+
+function applyTheme() {
+  const choice = storedTheme();
+  const root = document.documentElement;
+  if (choice) {
+    root.dataset.theme = choice;
+  } else {
+    delete root.dataset.theme;
+  }
+
+  const isDark = activeTheme() === 'dark';
+  themeToggle.textContent = isDark ? '☀' : '☾';
+  themeToggle.setAttribute('aria-pressed', String(isDark));
+}
+
+function toggleTheme() {
+  const next = activeTheme() === 'dark' ? 'light' : 'dark';
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch (err) {
+    console.error('Could not save the theme choice.', err);
+  }
+  applyTheme();
+}
+
+applyTheme();
 
 let habits = load();
 
@@ -282,5 +342,14 @@ habitList.addEventListener('click', (event) => {
 });
 
 undoButton.addEventListener('click', undoRemoval);
+
+themeToggle.addEventListener('click', toggleTheme);
+
+// Track the OS only while the user has not overridden it.
+if (darkQuery) {
+  darkQuery.addEventListener('change', () => {
+    if (!storedTheme()) applyTheme();
+  });
+}
 
 render();
