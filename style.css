@@ -1,13 +1,73 @@
+/**
+ * Theme palettes.
+ *
+ * With no explicit choice, the OS preference wins via the media query.
+ * A toggle sets data-theme on <html>, which overrides the OS in both
+ * directions — hence the dark palette appearing twice. Keep the two dark
+ * blocks in sync; they are the only place colors are defined.
+ */
+
 :root {
+  color-scheme: light;
   --bg: #f6f7f9;
   --surface: #ffffff;
   --border: #e2e5ea;
   --text: #1c2024;
   --text-muted: #6b7280;
   --accent: #2f7d5d;
+  --accent-hover: #276a4f;
   --accent-soft: #e6f2ec;
+  --accent-soft-hover: #d6e9df;
+  --on-accent: #ffffff;
   --danger: #b3261e;
+  --toast-bg: #1c2024;
+  --toast-text: #f6f7f9;
+  --toast-btn-bg: #f6f7f9;
+  --toast-btn-text: #1c2024;
+  --shadow: rgba(0, 0, 0, 0.2);
   --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #15171a;
+    --surface: #1e2125;
+    --border: #33383f;
+    --text: #e7e9ec;
+    --text-muted: #9aa1aa;
+    --accent: #52b389;
+    --accent-hover: #63c39a;
+    --accent-soft: #1f3329;
+    --accent-soft-hover: #274035;
+    --on-accent: #0f2419;
+    --danger: #f0918a;
+    --toast-bg: #2b3037;
+    --toast-text: #e7e9ec;
+    --toast-btn-bg: #52b389;
+    --toast-btn-text: #0f2419;
+    --shadow: rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #15171a;
+  --surface: #1e2125;
+  --border: #33383f;
+  --text: #e7e9ec;
+  --text-muted: #9aa1aa;
+  --accent: #52b389;
+  --accent-hover: #63c39a;
+  --accent-soft: #1f3329;
+  --accent-soft-hover: #274035;
+  --on-accent: #0f2419;
+  --danger: #f0918a;
+  --toast-bg: #2b3037;
+  --toast-text: #e7e9ec;
+  --toast-btn-bg: #52b389;
+  --toast-btn-text: #0f2419;
+  --shadow: rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -31,6 +91,10 @@ body {
 /* ---- Header ---- */
 
 .app-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
   margin-bottom: 1.5rem;
 }
 
@@ -42,6 +106,26 @@ body {
 .subtitle {
   margin: 0.25rem 0 0;
   color: var(--text-muted);
+}
+
+.theme-toggle {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ---- Add-habit form ---- */
@@ -94,7 +178,7 @@ button:focus-visible {
   padding: 0.55rem 1rem;
   font: inherit;
   font-weight: 600;
-  color: #fff;
+  color: var(--on-accent);
   background: var(--accent);
   border: none;
   border-radius: 6px;
@@ -102,7 +186,7 @@ button:focus-visible {
 }
 
 .btn-primary:hover {
-  background: #276a4f;
+  background: var(--accent-hover);
 }
 
 .form-error {
@@ -203,13 +287,13 @@ button:focus-visible {
 }
 
 .day.done {
-  color: #fff;
+  color: var(--on-accent);
   background: var(--accent);
   border-color: var(--accent);
 }
 
 .day.done .day-number {
-  color: #fff;
+  color: var(--on-accent);
 }
 
 /* Today is the only interactive cell — it is the tick box. */
@@ -220,7 +304,7 @@ button:focus-visible {
 }
 
 .day.today:hover {
-  background: #d6e9df;
+  background: var(--accent-soft-hover);
 }
 
 .day.today.done,
@@ -252,10 +336,10 @@ button:focus-visible {
   align-items: center;
   max-width: calc(100vw - 2rem);
   padding: 0.65rem 0.85rem 0.65rem 1rem;
-  color: #f6f7f9;
-  background: #1c2024;
+  color: var(--toast-text);
+  background: var(--toast-bg);
   border-radius: var(--radius);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px var(--shadow);
 }
 
 .undo-message {
@@ -269,8 +353,8 @@ button:focus-visible {
   font: inherit;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1c2024;
-  background: #f6f7f9;
+  color: var(--toast-btn-text);
+  background: var(--toast-btn-bg);
   border: none;
   border-radius: 6px;
   cursor: pointer;
