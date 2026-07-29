@@ -342,6 +342,12 @@ button:focus-visible {
   box-shadow: 0 6px 20px var(--shadow);
 }
 
+/* The display above is an author rule, so it beats the browser's
+   [hidden] { display: none } and the bar would never hide. */
+.undo-bar[hidden] {
+  display: none;
+}
+
 .undo-message {
   font-size: 0.9rem;
   overflow-wrap: anywhere;
