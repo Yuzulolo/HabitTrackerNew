@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>Habit Tracker</h1>
+      <p class="subtitle">Tick off today, watch the week fill in.</p>
+    </header>
+
+    <form id="habit-form" class="habit-form" autocomplete="off">
+      <div class="field">
+        <label for="habit-name">Habit</label>
+        <input type="text" id="habit-name" name="name" placeholder="Read for 20 minutes" maxlength="60" required>
+      </div>
+      <div class="field">
+        <label for="habit-description">Description <span class="optional">(optional)</span></label>
+        <input type="text" id="habit-description" name="description" placeholder="Fiction counts" maxlength="120">
+      </div>
+      <button type="submit" class="btn-primary">Add habit</button>
+      <p id="form-error" class="form-error" role="alert" hidden></p>
+    </form>
+
+    <section class="habits" aria-label="Your habits">
+      <ul id="habit-list" class="habit-list"></ul>
+      <p id="empty-state" class="empty-state" hidden>No habits yet. Add your first one above.</p>
+    </section>
+  </main>
+
+  <div id="undo-bar" class="undo-bar" role="status" aria-live="polite" hidden>
+    <span id="undo-message" class="undo-message"></span>
+    <button type="button" id="undo-btn" class="btn-undo">Undo <span id="undo-countdown"></span></button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
